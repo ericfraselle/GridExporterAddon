@@ -116,7 +116,8 @@ class ExcelInputStreamFactory<T> extends BaseInputStreamFactory<T> {
         Cell cellwp;
         cellwp = findCellWithPlaceHolder(sheet, entry.getKey());
         while (cellwp != null) {
-          cellwp.setCellValue(entry.getValue());
+          String value = cellwp.getStringCellValue().replace(entry.getKey(), entry.getValue());
+          cellwp.setCellValue(value);
           cellwp = findCellWithPlaceHolder(sheet, entry.getKey());
         }
       });
@@ -275,7 +276,7 @@ class ExcelInputStreamFactory<T> extends BaseInputStreamFactory<T> {
     for (Row row : sheet) {
       for (Cell cell : row) {
         if (PoiHelper.cellTypeEquals(cell, CellType.STRING)) {
-          if (cell.getRichStringCellValue().getString().trim().equals(placeholder)) {
+          if (cell.getRichStringCellValue().getString().trim().contains(placeholder)) {
             return cell;
           }
         }
